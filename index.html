@@ -1,0 +1,776 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UGS Files | TheMaker777</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Space Mono -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
+    <style>
+        /* --- Base & UI Styles --- */
+        :root {
+            --theme-rgb: 74, 222, 128; /* Hacker Green default */
+        }
+        [data-theme="amber"] { --theme-rgb: 251, 191, 36; }
+        [data-theme="pink"] { --theme-rgb: 244, 114, 182; }
+        [data-theme="blue"] { --theme-rgb: 96, 165, 250; }
+
+        .theme-text { color: rgb(var(--theme-rgb)) !important; }
+        .theme-border { border-color: rgb(var(--theme-rgb)) !important; }
+        .theme-border-dark { border-color: rgba(var(--theme-rgb), 0.3) !important; }
+        .theme-bg:hover { background-color: rgb(var(--theme-rgb)) !important; color: #000 !important; }
+
+        body {
+            background-color: #050505;
+            color: #f3f4f6;
+            margin: 0;
+            overflow-x: hidden;
+            font-family: 'Space Mono', monospace;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+        }
+
+        .link-item {
+            color: #4ade80;
+            text-decoration: none;
+            border: 1px solid #333;
+            padding: 0.5rem 1rem;
+            transition: all 0.2s ease;
+            display: inline-block;
+            pointer-events: auto;
+        }
+        
+        .link-item:hover {
+            background: rgba(74, 222, 128, 0.1);
+            border-color: #4ade80;
+        }
+
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #000; }
+        ::-webkit-scrollbar-thumb { background: #333; }
+        ::-webkit-scrollbar-thumb:hover { background: #555; }
+
+        /* Sidebar Navigation */
+        .sidebar {
+            position: fixed;
+            left: 0; top: 0;
+            width: 80px; height: 100vh;
+            background: rgba(0, 0, 0, 0.9);
+            border-right: 1px solid #333;
+            padding: 20px 10px;
+            display: flex; flex-direction: column; gap: 8px;
+            overflow-y: auto; z-index: 1000;
+        }
+
+        .sidebar-btn {
+            background: transparent;
+            border: 1px solid #333;
+            padding: 10px; font-size: 16px;
+            font-family: 'Space Mono', monospace;
+            cursor: pointer; color: white;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+        }
+
+        .sidebar-btn:hover:not(.empty) {
+            background: #fff;
+            color: #000;
+            font-weight: bold;
+        }
+
+        .sidebar-btn.empty {
+            opacity: 0.3;
+            cursor: not-allowed;
+            border-color: transparent;
+        }
+
+        /* Main Layout */
+        .main-content {
+            margin-left: 80px;
+            flex: 1; 
+            padding: 2rem;
+            z-index: 10; 
+            min-height: 100vh;
+            width: calc(100% - 80px);
+            pointer-events: none;
+        }
+
+        .interactive-area { pointer-events: auto; }
+
+        /* Dynamic Database Content Containers */
+        #sections-container {
+            background: rgba(15, 15, 15, 0.9);
+            backdrop-filter: blur(8px);
+            border: 1px solid #333;
+            border-radius: 4px;
+            padding: 2rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+        }
+
+        .letter-section { margin-bottom: 40px; }
+        
+        .letter-header {
+            color: rgb(var(--theme-rgb)); font-size: 24px; font-weight: bold;
+            margin-bottom: 20px; padding-bottom: 8px;
+            border-bottom: 1px dashed rgba(var(--theme-rgb), 0.3);
+            text-transform: uppercase;
+        }
+
+        /* Styles for Buttons injected by external games.js */
+        .game-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 6px;
+        }
+
+        input[type="button"] {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid #222;
+            padding: 14px 20px;
+            font-size: 13px;
+            font-family: 'Space Mono', monospace;
+            cursor: pointer; color: #ccc; text-align: left;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            width: 100%; max-width: 100%;
+            margin-bottom: 0 !important;
+            padding-right: 40px !important;
+            display: block;
+        }
+
+        input[type="button"]:hover {
+            background: rgb(var(--theme-rgb)); 
+            color: #000; 
+            border-color: rgb(var(--theme-rgb));
+            padding-left: 30px;
+            font-weight: bold;
+        }
+
+        .fav-star {
+            position: absolute;
+            right: 12px;
+            font-size: 18px;
+            color: #444;
+            cursor: pointer;
+            background: none; border: none; padding: 0; outline: none;
+            transition: color 0.2s, transform 0.2s;
+        }
+        .fav-star:hover { color: #fbbf24; transform: scale(1.1); }
+        .fav-star.active { color: #fbbf24; }
+
+        /* Startup Anim & Modals */
+        #startup-screen {
+            position: fixed; inset: 0; z-index: 99999;
+            background: #050505; color: rgb(var(--theme-rgb));
+            font-family: 'Space Mono', monospace;
+            display: none; flex-direction: column; justify-content: center; padding: 2rem;
+            transition: opacity 0.5s ease;
+        }
+        #settings-modal, #changelog-modal {
+            display: none; position: fixed; inset: 0; z-index: 9999;
+            background: rgba(0,0,0,0.85); backdrop-filter: blur(4px);
+            align-items: center; justify-content: center;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { width: 60px; }
+            .main-content { margin-left: 60px; width: calc(100% - 60px); padding: 1rem; }
+            .letter-header { font-size: 18px; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- STARTUP SCREEN -->
+    <div id="startup-screen">
+        <div id="startup-text" class="max-w-3xl mx-auto text-lg md:text-2xl font-bold"></div>
+    </div>
+
+    <!-- SETTINGS MODAL -->
+    <div id="settings-modal">
+        <div class="bg-[#0f0f0f] border theme-border p-6 rounded shadow-2xl max-w-md w-full mx-4">
+            <h2 class="theme-text text-xl font-bold mb-6 pb-2 border-b theme-border-dark uppercase">SYS_CONFIG //</h2>
+            
+            <div class="space-y-4 font-mono text-sm">
+                <div class="flex items-center justify-between">
+                    <label class="text-gray-300">STARTUP_ANIMATION</label>
+                    <input type="checkbox" id="set-startup" class="accent-emerald-500 w-4 h-4">
+                </div>
+                
+                <div class="flex flex-col gap-2">
+                    <div class="flex items-center justify-between">
+                        <label class="text-gray-300">PANIC_BUTTON (ESC / ~)</label>
+                        <input type="checkbox" id="set-panic" class="accent-emerald-500 w-4 h-4">
+                    </div>
+                    <input type="text" id="set-panic-url" placeholder="https://nebo.instructure.com/" class="w-full bg-black/50 border border-gray-700 text-gray-300 px-3 py-1 text-xs focus:outline-none focus:theme-border">
+                </div>
+
+                <div class="flex items-center justify-between pt-2 border-t border-gray-800">
+                    <label class="text-gray-300">SYSTEM_THEME</label>
+                    <select id="set-theme" class="bg-black/50 border border-gray-700 theme-text px-2 py-1 text-xs focus:outline-none">
+                        <option value="green">Hacker Green</option>
+                        <option value="amber">Terminal Amber</option>
+                        <option value="pink">Cyberpunk Pink</option>
+                        <option value="blue">Ice Blue</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="mt-8 flex justify-end gap-3">
+                <button onclick="toggleSettings()" class="text-xs border border-gray-700 text-gray-400 px-4 py-2 hover:bg-white hover:text-black transition-all">CANCEL</button>
+                <button onclick="saveSettings()" class="text-xs border theme-border theme-text px-4 py-2 theme-bg transition-all font-bold">SAVE_CHANGES</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- CHANGELOG MODAL -->
+    <div id="changelog-modal">
+        <div class="bg-[#0f0f0f] border theme-border p-6 rounded shadow-2xl max-w-lg w-full mx-4">
+            <h2 class="theme-text text-xl font-bold mb-4 pb-2 border-b theme-border-dark uppercase flex justify-between items-center">
+                <span>SYSTEM_LOGS //</span>
+                <span class="text-gray-600 text-[10px]">READ_ONLY</span>
+            </h2>
+            
+            <div class="space-y-3 text-sm text-gray-400 font-mono max-h-64 overflow-y-auto pr-2">
+                <div>
+                    <span class="theme-text">[CURRENT]</span> 
+                    <span class="text-white">v1.4:</span> Added Schoolboy Runaway to newly added files. Moved system logs to modal window.
+                </div>
+                <div>
+                    <span class="text-emerald-400">[ARCHIVE]</span> 
+                    <span class="text-white">v1.3:</span> Optimized Logic (DRY), Cached Canvas Renderer, Startup Anim, Panic Button, Theme Engine, & Favorites.
+                </div>
+                <div>
+                    <span class="text-emerald-400">[ARCHIVE]</span> 
+                    <span class="text-white">v1.2:</span> Added Stealth Cloaker, Tagging system, and System Changelog.
+                </div>
+                <div>
+                    <span class="text-emerald-400">[ARCHIVE]</span> 
+                    <span class="text-white">v1.1:</span> Implemented live search filtering and dynamic button injection.
+                </div>
+            </div>
+
+            <div class="mt-8 flex justify-end">
+                <button onclick="toggleChangelog()" class="text-xs border theme-border theme-text px-4 py-2 theme-bg transition-all font-bold">CLOSE</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOP RIGHT BUTTONS -->
+    <div class="fixed top-4 right-4 z-[9000] flex gap-2 interactive-area">
+        <button onclick="toggleChangelog()" class="text-xs font-bold font-mono border theme-border theme-text bg-[#0a0a0a]/90 px-4 py-2 shadow-[0_0_15px_rgba(0,0,0,0.8)] backdrop-blur-md theme-bg transition-all tracking-wider">
+            [ SYS_LOGS ]
+        </button>
+        <button onclick="toggleSettings()" class="text-xs font-bold font-mono border theme-border theme-text bg-[#0a0a0a]/90 px-4 py-2 shadow-[0_0_15px_rgba(0,0,0,0.8)] backdrop-blur-md theme-bg transition-all tracking-wider">
+            [ SYS_CONFIG ]
+        </button>
+    </div>
+
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- Sidebar -->
+    <div class="sidebar interactive-area" id="sidebar"></div>
+
+    <div class="main-content pt-20">
+        
+        <div class="max-w-5xl mx-auto">
+            <div class="interactive-area mb-8">
+            </div>
+
+            <div class="interactive-area text-left">
+                <div class="flex flex-col md:flex-row md:items-end gap-4 mb-6">
+                    <div>
+                        <h1 class="text-4xl md:text-6xl font-black tracking-tighter">UGS_FILES</h1>
+                        <p class="theme-text text-xs tracking-[0.3em] font-bold uppercase mt-2">Archive_Access_Authorized</p>
+                    </div>
+                </div>
+                
+                <div class="mb-10 text-sm text-gray-500 space-y-3 border-l-2 theme-border-dark pl-6">
+                    <p>SYSTEM: <span class="text-gray-300">Ultimate Game Stash Core</span></p>
+                    <p>STATUS: <span class="theme-text">Online</span></p>
+                    <p>SRC_LINK: <a href="https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/" target="_blank" class="text-white hover:theme-text transition-colors">[ Google Docs ]</a></p>
+                    <p>COMMS: <a href="https://discord.gg/rmVsAqkpkA" target="_blank" class="text-white hover:theme-text transition-colors">[ Discord Server ]</a></p>
+                    
+                    <div class="pt-4 flex flex-wrap gap-2">
+                        <button id="force-load" onclick="loadDatabase()" class="text-[10px] border border-gray-700 px-4 py-2 hover:bg-white hover:text-black transition-all font-bold">
+                            RELOAD_FILES()
+                        </button>
+                        <button id="random-game" onclick="playRandomGame()" class="text-[10px] border theme-border theme-text px-4 py-2 theme-bg transition-all font-bold">
+                            LAUNCH_RANDOM_GAME()
+                        </button>
+                    </div>
+                    
+                    <!-- Search Bar -->
+                    <div class="pt-4 w-full max-w-md">
+                        <input type="text" id="search-input" onkeyup="filterGames()" placeholder="SEARCH_FILES()..." class="w-full bg-transparent border border-gray-700 theme-text px-4 py-2 text-[11px] focus:outline-none focus:theme-border focus:bg-black/40 placeholder-gray-600 transition-all font-mono">
+                    </div>
+                </div>
+
+                <!-- FAVORITES SECTION -->
+                <div id="favorites-section" class="mb-8 border border-yellow-900/50 bg-[#0a0a0a]/80 backdrop-blur-sm p-4 rounded shadow-lg max-w-3xl" style="display: none;">
+                    <h3 class="text-yellow-500 font-bold mb-3 border-b border-yellow-900/50 pb-2 text-sm uppercase flex justify-between">
+                        <span>STARRED_FILES //</span>
+                        <span class="text-gray-600 text-[10px]">LOCAL_STORAGE</span>
+                    </h3>
+                    <div id="favorites-container" class="mt-4"></div>
+                </div>
+
+                <!-- HIDDEN SOURCE -->
+                <div id="custom-games-source" style="display: none;">
+                    <input type="button" data-new="true" value="Schoolboy Runaway" onclick="launchCloaked('https://st.8games.net/10/8g/igra-schoolboy-runaway/')">
+                    <!-- <input type="button" data-new="true" value="Alien Invaders (NEW)" onclick="launchCloaked('https://example.com/a')"> -->
+                    <!-- <input type="button" data-new="true" value="My Raw HTML Game" onclick="launchCloaked('<h1 style=\'color:white; font-family:sans-serif;\'>My Game HTML</h1>', true)"> -->
+                    <!-- <input type="button" value="Zombies" onclick="launchCloaked('https://example.com/z')"> -->
+                </div>
+
+                <!-- NEWLY ADDED FILES SECTION -->
+                <div id="newly-added-section" class="mt-8 bg-[#0f0f0f]/90 backdrop-blur-md border theme-border-dark rounded p-6 shadow-2xl mb-8" style="display: none;">
+                    <h2 class="theme-text text-xl font-bold mb-4 pb-2 border-b border-dashed theme-border-dark uppercase">
+                        NEWLY_ADDED_FILES //
+                    </h2>
+                    <div id="new-games-container"></div>
+                </div>
+
+                <!-- Content Area -->
+                <div id="sections-container" class="mt-8">
+                    <!-- Loading state indicator -->
+                    <div id="loading-overlay" class="py-20 text-center text-gray-600 animate-pulse">
+                        INITIALIZING_DATABASE_FETCH...
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Background Logic -->
+    <script>
+        const canvas = document.getElementById('bg-canvas');
+        const ctx = canvas.getContext('2d');
+        let width, height, particles = [];
+        let currentThemeRgb = '74, 222, 128'; // Cached performance variable
+
+        function updateThemeColor() {
+            currentThemeRgb = getComputedStyle(document.documentElement).getPropertyValue('--theme-rgb').trim() || '74, 222, 128';
+        }
+
+        function resize() {
+            width = canvas.width = window.innerWidth;
+            height = canvas.height = window.innerHeight;
+        }
+
+        class Particle {
+            constructor() { this.reset(); }
+            reset() {
+                this.x = Math.random() * width;
+                this.y = Math.random() * height;
+                this.vx = (Math.random() - 0.5) * 0.4;
+                this.vy = (Math.random() - 0.5) * 0.4;
+                this.size = Math.random() * 1.5 + 0.5;
+            }
+            update() {
+                this.x += this.vx;
+                this.y += this.vy;
+                if (this.x < 0 || this.x > width) this.vx *= -1;
+                if (this.y < 0 || this.y > height) this.vy *= -1;
+            }
+            draw() {
+                ctx.fillStyle = `rgba(${currentThemeRgb}, 0.3)`;
+                ctx.beginPath();
+                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                ctx.fill();
+            }
+        }
+
+        function initParticles() {
+            particles = [];
+            for (let i = 0; i < 80; i++) particles.push(new Particle());
+        }
+
+        let mouse = { x: null, y: null };
+        window.addEventListener('mousemove', e => { mouse.x = e.x; mouse.y = e.y; });
+        window.addEventListener('resize', () => { resize(); initParticles(); });
+
+        function animate() {
+            ctx.fillStyle = 'rgba(5, 5, 5, 0.15)';
+            ctx.fillRect(0, 0, width, height);
+            
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+                if (mouse.x && mouse.y) {
+                    let dx = mouse.x - p.x;
+                    let dy = mouse.y - p.y;
+                    let dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 180) {
+                        ctx.strokeStyle = `rgba(${currentThemeRgb}, ${0.2 * (1 - dist/180)})`;
+                        ctx.lineWidth = 0.5;
+                        ctx.beginPath();
+                        ctx.moveTo(p.x, p.y);
+                        ctx.lineTo(mouse.x, mouse.y);
+                        ctx.stroke();
+                    }
+                }
+            });
+            requestAnimationFrame(animate);
+        }
+
+        resize();
+        initParticles();
+        animate();
+    </script>
+
+    <!-- Data Cleaning & Observer Logic -->
+    <script>
+        const defaultSettings = { startupAnim: false, panicBtn: false, panicUrl: 'https://nebo.instructure.com/', theme: 'green' };
+        let settings = JSON.parse(localStorage.getItem('ugs_settings')) || defaultSettings;
+        let favorites = JSON.parse(localStorage.getItem('ugs_favorites')) || [];
+        let allGamesData = {};
+
+        // Init
+        document.documentElement.setAttribute('data-theme', settings.theme);
+        updateThemeColor();
+        document.getElementById('set-startup').checked = settings.startupAnim;
+        document.getElementById('set-panic').checked = settings.panicBtn;
+        document.getElementById('set-panic-url').value = settings.panicUrl || 'https://nebo.instructure.com/';
+        document.getElementById('set-theme').value = settings.theme || 'green';
+
+        function toggleSettings() {
+            const modal = document.getElementById('settings-modal');
+            modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+        }
+        
+        function toggleChangelog() {
+            const modal = document.getElementById('changelog-modal');
+            modal.style.display = modal.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function saveSettings() {
+            settings.startupAnim = document.getElementById('set-startup').checked;
+            settings.panicBtn = document.getElementById('set-panic').checked;
+            let url = document.getElementById('set-panic-url').value.trim();
+            settings.panicUrl = url ? url : 'https://nebo.instructure.com/';
+            settings.theme = document.getElementById('set-theme').value;
+            
+            localStorage.setItem('ugs_settings', JSON.stringify(settings));
+            document.documentElement.setAttribute('data-theme', settings.theme);
+            updateThemeColor();
+            toggleSettings();
+        }
+
+        window.addEventListener('keydown', (e) => {
+            if (settings.panicBtn && (e.key === 'Escape' || e.key === '`' || e.key === '~')) {
+                window.location.href = settings.panicUrl;
+            }
+        });
+
+        async function runStartup() {
+            if (!settings.startupAnim) return;
+            const screen = document.getElementById('startup-screen');
+            const textContainer = document.getElementById('startup-text');
+            screen.style.display = 'flex';
+            
+            const lines = ["> INITIALIZING UGS CORE...", "> BYPASSING FIREWALL...", "> ACCESS GRANTED."];
+            
+            for (let line of lines) {
+                let p = document.createElement('p');
+                p.className = 'mb-2';
+                textContainer.appendChild(p);
+                for (let i = 0; i < line.length; i++) {
+                    p.innerHTML += line[i];
+                    await new Promise(r => setTimeout(r, 25));
+                }
+                await new Promise(r => setTimeout(r, 200));
+            }
+            
+            await new Promise(r => setTimeout(r, 400));
+            screen.style.opacity = '0';
+            setTimeout(() => screen.style.display = 'none', 500);
+        }
+
+        const container = document.getElementById('sections-container');
+        
+        function cleanButton(btn) {
+            if (!btn || !btn.value) return;
+            let text = btn.value.replace(/^cl\s*/i, '');
+            text = text.replace(/(\d+)([a-zA-Z]+)/g, '$1 $2').replace(/([a-zA-Z]+)(\d+)/g, '$1 $2').replace(/([a-z])([A-Z])/g, '$1 $2');
+            btn.value = text.split(/\s+/).map(word => {
+                if (word.length === 0 || (word === word.toUpperCase() && word.length > 1)) return word;
+                return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+            }).join(' ').trim();
+        }
+
+        function wrapGameButton(btn) {
+            if (btn.dataset.wrapped) return;
+            btn.dataset.wrapped = "true";
+
+            let action = btn.getAttribute('onclick') || btn.onclick;
+            if (!allGamesData[btn.value]) allGamesData[btn.value] = { value: btn.value, onclick: action };
+
+            const wrapper = document.createElement('div');
+            wrapper.className = 'game-wrapper';
+            
+            if (btn.parentNode) btn.parentNode.insertBefore(wrapper, btn);
+            wrapper.appendChild(btn);
+            
+            const star = document.createElement('button');
+            star.className = 'fav-star' + (favorites.includes(btn.value) ? ' active' : '');
+            star.innerHTML = '★';
+            star.onclick = (e) => {
+                e.preventDefault();
+                toggleFavorite(btn.value);
+            };
+            wrapper.appendChild(star);
+        }
+
+        function toggleFavorite(gameName) {
+            if (favorites.includes(gameName)) {
+                favorites = favorites.filter(f => f !== gameName);
+            } else {
+                favorites.push(gameName);
+            }
+            localStorage.setItem('ugs_favorites', JSON.stringify(favorites));
+            renderFavorites();
+            
+            // Optimized DOM query for toggling stars universally
+            document.querySelectorAll(`input[value="${gameName}"] ~ .fav-star`).forEach(star => {
+                star.classList.toggle('active', favorites.includes(gameName));
+            });
+        }
+
+        function renderFavorites() {
+            const favContainer = document.getElementById('favorites-container');
+            const favSection = document.getElementById('favorites-section');
+            favContainer.innerHTML = '';
+            
+            if (favorites.length === 0) {
+                favSection.style.display = 'none';
+                return;
+            }
+            
+            favSection.style.display = 'block';
+            [...favorites].sort((a, b) => a.localeCompare(b)).forEach(fav => {
+                if (!allGamesData[fav]) return;
+                const data = allGamesData[fav];
+                
+                const wrapper = document.createElement('div');
+                wrapper.className = 'game-wrapper';
+                
+                const btn = document.createElement('input');
+                btn.type = 'button';
+                btn.value = data.value;
+                btn.dataset.wrapped = "true";
+                
+                if (typeof data.onclick === 'string') btn.setAttribute('onclick', data.onclick);
+                else if (typeof data.onclick === 'function') btn.onclick = data.onclick;
+                
+                const star = document.createElement('button');
+                star.className = 'fav-star active';
+                star.innerHTML = '★';
+                star.onclick = (e) => {
+                    e.preventDefault();
+                    toggleFavorite(data.value);
+                };
+                
+                wrapper.appendChild(btn);
+                wrapper.appendChild(star);
+                favContainer.appendChild(wrapper);
+            });
+        }
+
+        function launchCloaked(content, isHtml = false) {
+            let win = window.open('about:blank', '_blank');
+            if (!win) return console.error("Popup blocked! Allow popups to launch games.");
+
+            win.document.title = "Google Drive"; 
+            let link = win.document.createElement("link");
+            link.rel = "icon";
+            link.href = "https://ssl.gstatic.com/docs/doclist/images/infinite_arrow_favicon_5.ico";
+            win.document.head.appendChild(link);
+            win.document.body.style.cssText = "margin:0;padding:0;overflow:hidden;background-color:#000;";
+
+            if (isHtml) {
+                win.document.body.innerHTML = content;
+            } else {
+                let iframe = win.document.createElement('iframe');
+                iframe.src = content;
+                iframe.style.cssText = 'width:100vw;height:100vh;border:none;margin:0;padding:0;';
+                win.document.body.appendChild(iframe);
+            }
+        }
+
+        // Helper function for sorting a container's wrappers to keep code DRY
+        function sortWrappersInside(parentContainer) {
+            const wrappers = Array.from(parentContainer.querySelectorAll('.game-wrapper'));
+            wrappers.sort((a, b) => {
+                const btnA = a.querySelector('input');
+                const btnB = b.querySelector('input');
+                return btnA.value.localeCompare(btnB.value);
+            });
+            wrappers.forEach(w => parentContainer.appendChild(w));
+        }
+
+        function integrateCustomGames() {
+            const source = document.getElementById('custom-games-source');
+            if (!source || source.dataset.integrated === 'true') return;
+
+            const customButtons = Array.from(source.querySelectorAll('input[type="button"]'));
+            if (customButtons.length === 0) return;
+
+            const existingSections = Array.from(container.querySelectorAll('.letter-section'));
+            const usesSections = existingSections.length > 0;
+            const newGamesContainer = document.getElementById('new-games-container');
+            const newlyAddedSection = document.getElementById('newly-added-section');
+            
+            customButtons.forEach(btn => {
+                const clone = btn.cloneNode(true);
+                cleanButton(clone);
+                wrapGameButton(clone);
+
+                if (clone.dataset.new === "true") {
+                    newGamesContainer.appendChild(clone.parentElement);
+                } else {
+                    if (usesSections) {
+                        const firstLetter = clone.value.charAt(0).toUpperCase();
+                        let section = existingSections.find(sec => sec.querySelector('.letter-header')?.innerText.trim().toUpperCase() === firstLetter);
+
+                        if (!section) {
+                            section = document.createElement('div');
+                            section.className = 'letter-section';
+                            section.innerHTML = `<div class="letter-header">${firstLetter}</div>`;
+                            existingSections.push(section);
+                            container.appendChild(section);
+                            
+                            existingSections.sort((a, b) => a.querySelector('.letter-header').innerText.localeCompare(b.querySelector('.letter-header').innerText));
+                            existingSections.forEach(sec => container.appendChild(sec));
+                        }
+                        section.appendChild(clone.parentElement);
+                        sortWrappersInside(section);
+                    } else {
+                        container.appendChild(clone.parentElement);
+                    }
+                }
+            });
+
+            if (!usesSections) sortWrappersInside(container);
+            
+            if (newGamesContainer.children.length > 0) {
+                newlyAddedSection.style.display = 'block';
+                sortWrappersInside(newGamesContainer);
+            }
+
+            source.dataset.integrated = 'true';
+            renderFavorites();
+        }
+
+        function playRandomGame() {
+            const allButtons = Array.from(document.querySelectorAll('input[type="button"]')).filter(btn => !btn.closest('#custom-games-source'));
+            
+            if (allButtons.length === 0) {
+                const status = document.createElement('div');
+                status.className = "text-red-500 text-[10px] mt-2";
+                status.innerText = "ERROR: DATABASE_NOT_LOADED";
+                document.getElementById('random-game').parentElement.appendChild(status);
+                setTimeout(() => status.remove(), 2000);
+                return;
+            }
+            
+            const randomBtn = allButtons[Math.floor(Math.random() * allButtons.length)];
+            randomBtn.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            randomBtn.classList.add('theme-bg');
+            setTimeout(() => {
+                randomBtn.click();
+                randomBtn.classList.remove('theme-bg');
+            }, 500);
+        }
+
+        // DRY Filter logic applied universally to all sections
+        function filterGames() {
+            const query = document.getElementById('search-input').value.toLowerCase();
+            
+            // Toggle visibility of all wrappers based on query
+            document.querySelectorAll('.game-wrapper').forEach(wrapper => {
+                const btn = wrapper.querySelector('input[type="button"]');
+                const isVisible = btn && btn.value.toLowerCase().includes(query);
+                wrapper.style.display = isVisible ? '' : 'none';
+            });
+
+            // Toggle visibility of parent sections if they have visible wrappers inside
+            document.querySelectorAll('.letter-section, #newly-added-section').forEach(section => {
+                const hasVisible = Array.from(section.querySelectorAll('.game-wrapper')).some(w => w.style.display !== 'none');
+                
+                // Extra check: prevent new section from showing if it genuinely has 0 elements inside
+                if (section.id === 'newly-added-section' && section.querySelectorAll('.game-wrapper').length === 0) {
+                    section.style.display = 'none';
+                } else {
+                    section.style.display = hasVisible ? 'block' : 'none';
+                }
+            });
+        }
+
+        let integrationTimer;
+        const observer = new MutationObserver((mutations) => {
+            let needsIntegration = false;
+            for (const mutation of mutations) {
+                mutation.addedNodes.forEach(node => {
+                    if (node.nodeType === 1) {
+                        const loader = document.getElementById('loading-overlay');
+                        if (loader) loader.remove();
+
+                        const buttons = node.tagName === 'INPUT' && node.type === 'button' ? [node] : node.querySelectorAll('input[type="button"]');
+                        if (buttons.length > 0) {
+                            buttons.forEach(btn => { cleanButton(btn); wrapGameButton(btn); });
+                            needsIntegration = true;
+                        }
+                    }
+                });
+            }
+
+            if (needsIntegration) {
+                clearTimeout(integrationTimer);
+                integrationTimer = setTimeout(() => {
+                    integrateCustomGames();
+                    renderFavorites();
+                }, 500);
+            }
+        });
+
+        observer.observe(container, { childList: true, subtree: true });
+
+        function loadDatabase() {
+            const source = document.getElementById('custom-games-source');
+            if (source) source.dataset.integrated = 'false';
+            
+            const newGamesContainer = document.getElementById('new-games-container');
+            if (newGamesContainer) newGamesContainer.innerHTML = '';
+
+            const oldScript = document.getElementById('ugs-data-script');
+            if (oldScript) oldScript.remove();
+
+            const script = document.createElement('script');
+            script.id = 'ugs-data-script';
+            script.src = 'https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/games.js';
+            document.body.appendChild(script);
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            runStartup();
+            loadDatabase();
+        });
+    </script>
+</body>
+</html>
