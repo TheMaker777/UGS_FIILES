@@ -177,8 +177,7 @@
                 <span class="text-gray-600 text-[10px]">READ_ONLY</span>
             </h2>
             <div class="space-y-3 text-sm text-gray-400 font-mono max-h-64 overflow-y-auto pr-2">
-                <div><span class="theme-text">[CURRENT]</span> <span class="text-white">v1.5:</span> Offline-resilient DB caching. Game list now survives CDN blocks after first load.</div>
-                <div><span class="text-emerald-400">[ARCHIVE]</span> <span class="text-white">v1.4:</span> Updated newly added files list. Moved system logs to modal window. Added Boxel Rebound!</div>
+                <div><span class="theme-text">[CURRENT]</span> <span class="text-white">v1.4:</span> Updated newly added files list. Moved system logs to modal window. Added Boxel Rebound!</div>
                 <div><span class="text-emerald-400">[ARCHIVE]</span> <span class="text-white">v1.3:</span> Optimized Logic (DRY), Cached Canvas Renderer, Startup Anim, Panic Button, Theme Engine, &amp; Favorites.</div>
                 <div><span class="text-emerald-400">[ARCHIVE]</span> <span class="text-white">v1.2:</span> Added Stealth Cloaker, Tagging system, and System Changelog.</div>
                 <div><span class="text-emerald-400">[ARCHIVE]</span> <span class="text-white">v1.1:</span> Implemented live search filtering and dynamic button injection.</div>
@@ -186,77 +185,6 @@
             <div class="mt-8 flex justify-end">
                 <button onclick="toggleModal('changelog-modal')"
                     class="text-xs border theme-border theme-text px-4 py-2 theme-bg transition-all font-bold">CLOSE</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- COMM_LINK ADVERTISEMENT MODAL -->
-    <div id="comms-modal" class="ugs-modal">
-        <div class="bg-[#0a0a0a] border theme-border rounded shadow-2xl max-w-2xl w-full mx-4 overflow-hidden flex flex-col" style="max-height: 90vh;">
-            <div class="relative p-6 pb-4 border-b theme-border-dark overflow-hidden">
-                <div class="absolute inset-0 opacity-5" style="background: repeating-linear-gradient(45deg, rgb(var(--theme-rgb)) 0px, rgb(var(--theme-rgb)) 1px, transparent 1px, transparent 20px);"></div>
-                <div class="relative flex items-start justify-between gap-4">
-                    <div>
-                        <div class="text-[9px] theme-text font-bold tracking-[0.4em] uppercase mb-1">UGS Systems // New Feature</div>
-                        <h2 class="text-white text-2xl font-black tracking-tighter uppercase">COMM_LINK <span class="theme-text">2.0</span></h2>
-                        <p class="text-gray-400 text-xs mt-1 font-mono">The upgraded standalone chat platform has arrived.</p>
-                    </div>
-                    <div class="flex-shrink-0 w-12 h-12 border theme-border flex items-center justify-center" style="background: rgba(var(--theme-rgb),0.08);">
-                        <svg class="w-6 h-6 theme-text" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-            <div class="p-6 overflow-y-auto flex-1">
-                <p class="text-[10px] text-gray-500 uppercase tracking-widest mb-4 font-bold">// FEATURE_MANIFEST</p>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-6">
-                    <div class="border border-gray-800 p-3 rounded bg-black/40 flex gap-3 items-start hover:border-gray-600 transition-colors">
-                        <span class="theme-text font-black text-lg leading-none mt-0.5">⌗</span>
-                        <div><div class="text-white text-xs font-bold uppercase mb-0.5">Custom Sectors</div><div class="text-gray-500 text-[10px] leading-relaxed">Create or join any named room. Lock sectors to require approval before entry.</div></div>
-                    </div>
-                    <div class="border border-gray-800 p-3 rounded bg-black/40 flex gap-3 items-start hover:border-gray-600 transition-colors">
-                        <span class="theme-text font-black text-lg leading-none mt-0.5">◉</span>
-                        <div><div class="text-white text-xs font-bold uppercase mb-0.5">Live Agent Roster</div><div class="text-gray-500 text-[10px] leading-relaxed">See all active users in real-time. Ping indicators show who's online right now.</div></div>
-                    </div>
-                    <div class="border border-gray-800 p-3 rounded bg-black/40 flex gap-3 items-start hover:border-gray-600 transition-colors">
-                        <span class="theme-text font-black text-lg leading-none mt-0.5">@</span>
-                        <div><div class="text-white text-xs font-bold uppercase mb-0.5">Direct Messages</div><div class="text-gray-500 text-[10px] leading-relaxed">Click any agent to open a private encrypted DM channel, separate from public rooms.</div></div>
-                    </div>
-                    <div class="border border-gray-800 p-3 rounded bg-black/40 flex gap-3 items-start hover:border-gray-600 transition-colors">
-                        <span class="theme-text font-black text-lg leading-none mt-0.5">✎</span>
-                        <div><div class="text-white text-xs font-bold uppercase mb-0.5">Edit &amp; Delete</div><div class="text-gray-500 text-[10px] leading-relaxed">Hover your own messages to edit or delete them. Changes reflect instantly for all users.</div></div>
-                    </div>
-                    <div class="border border-gray-800 p-3 rounded bg-black/40 flex gap-3 items-start hover:border-gray-600 transition-colors">
-                        <span class="theme-text font-black text-lg leading-none mt-0.5">⚑</span>
-                        <div><div class="text-white text-xs font-bold uppercase mb-0.5">Moderator Tools</div><div class="text-gray-500 text-[10px] leading-relaxed">Room owners can kick, ban, or freeze sectors. Admins can intercept any active channel.</div></div>
-                    </div>
-                    <div class="border border-gray-800 p-3 rounded bg-black/40 flex gap-3 items-start hover:border-gray-600 transition-colors">
-                        <span class="theme-text font-black text-lg leading-none mt-0.5">✦</span>
-                        <div><div class="text-white text-xs font-bold uppercase mb-0.5">Custom Identity</div><div class="text-gray-500 text-[10px] leading-relaxed">Set your agent alias — saved locally. Auto-filtered for clean comms across all sectors.</div></div>
-                    </div>
-                </div>
-                <div class="border border-gray-800 rounded bg-black/40 p-4 mb-5">
-                    <p class="text-[10px] text-gray-500 uppercase tracking-widest mb-3 font-bold">// HOW_TO_USE</p>
-                    <ol class="space-y-2 font-mono">
-                        <li class="flex gap-3 text-[11px]"><span class="theme-text font-black w-4 flex-shrink-0">1.</span><span class="text-gray-300">Click <span class="theme-text font-bold">LAUNCH_COMM_LINK</span> to open the standalone chat page.</span></li>
-                        <li class="flex gap-3 text-[11px]"><span class="theme-text font-black w-4 flex-shrink-0">2.</span><span class="text-gray-300">Set your <span class="text-white font-bold">Agent Alias</span> in the top-right username field.</span></li>
-                        <li class="flex gap-3 text-[11px]"><span class="theme-text font-black w-4 flex-shrink-0">3.</span><span class="text-gray-300">Chat in <span class="text-white font-bold">#GLOBAL</span> or create/join a custom sector using the room button.</span></li>
-                        <li class="flex gap-3 text-[11px]"><span class="theme-text font-black w-4 flex-shrink-0">4.</span><span class="text-gray-300">Click any agent's name to start a <span class="text-white font-bold">private DM</span> thread.</span></li>
-                    </ol>
-                </div>
-                <div class="flex items-center gap-2 text-[10px] text-gray-500 font-mono">
-                    <input type="checkbox" id="comms-ad-no-show" class="accent-emerald-500 w-3.5 h-3.5 cursor-pointer" onchange="handleCommsNoShow(this.checked)">
-                    <label for="comms-ad-no-show" class="cursor-pointer hover:text-gray-300 transition-colors uppercase tracking-wider select-none">Do not show again on startup</label>
-                </div>
-            </div>
-            <div class="p-4 border-t theme-border-dark bg-black/60 flex justify-between items-center gap-3 flex-wrap">
-                <button onclick="toggleModal('comms-modal')"
-                    class="text-xs border border-gray-700 text-gray-500 px-4 py-2 hover:bg-white hover:text-black transition-all font-bold font-mono uppercase">DISMISS</button>
-                <a href="https://codepen.io/Mack-Nelson/full/azmmGJy" target="_blank" onclick="toggleModal('comms-modal')"
-                    class="text-xs font-bold font-mono border theme-border theme-text px-6 py-2 theme-bg transition-all tracking-wider uppercase inline-block text-center">
-                    ▶ LAUNCH_COMM_LINK
-                </a>
             </div>
         </div>
     </div>
@@ -332,61 +260,9 @@
         </div>
     </div>
 
-    <!-- CHAT MODAL -->
-    <div id="chat-modal" class="ugs-modal">
-        <div class="bg-[#0f0f0f] border theme-border rounded shadow-2xl max-w-4xl w-full mx-4 h-[85vh] flex flex-col overflow-hidden">
-            <div class="flex flex-col border-b theme-border-dark bg-black/40">
-                <div class="p-3 flex justify-between items-center">
-                    <h2 class="theme-text text-lg font-bold uppercase flex items-center gap-2"><span>COMM_LINK //</span></h2>
-                    <div class="flex gap-2">
-                        <input type="text" id="chat-username" onchange="saveUsername()" placeholder="USERNAME"
-                            class="bg-black border border-gray-700 text-gray-300 px-2 py-1 text-xs focus:outline-none focus:theme-border w-24 md:w-32" title="Your Alias">
-                        <button onclick="toggleOnlineAgents()"
-                            class="text-xs border border-emerald-500/50 text-emerald-500 px-3 py-1 hover:bg-emerald-500 hover:text-black transition-all font-bold tracking-wider uppercase">Agents</button>
-                        <button onclick="toggleModal('chat-modal')"
-                            class="text-xs border theme-border theme-text px-3 py-1 theme-bg transition-all font-bold uppercase">Close</button>
-                    </div>
-                </div>
-                <div class="flex bg-[#0a0a0a] border-t border-gray-800 overflow-x-auto scrollbar-hide" id="chat-tabs"></div>
-                <div class="p-2 bg-[#050505] flex gap-2 border-t border-gray-800 text-xs">
-                    <input type="text" id="chat-room-input" placeholder="JOIN_CUSTOM_ROOM..."
-                        class="flex-1 bg-black/50 border border-gray-700 text-gray-300 px-3 py-1.5 focus:outline-none focus:theme-border uppercase tracking-wider"
-                        onkeypress="if(event.key==='Enter') joinRoom()">
-                    <button onclick="joinRoom()" class="border border-gray-700 px-4 py-1.5 hover:bg-white hover:text-black transition-all font-bold text-gray-400">+</button>
-                </div>
-            </div>
-            <div class="flex flex-1 overflow-hidden relative">
-                <div class="flex-1 flex flex-col h-full overflow-hidden">
-                    <div id="chat-messages" class="flex-1 overflow-y-auto p-4 flex flex-col bg-[#050505] scroll-smooth font-mono">
-                        <div class="text-center text-gray-600 text-xs my-auto animate-pulse" id="chat-status">ESTABLISHING_SECURE_CONNECTION...</div>
-                    </div>
-                    <div class="p-4 border-t theme-border-dark bg-black/40 flex gap-2">
-                        <input type="text" id="chat-input" placeholder="BROADCAST_MESSAGE..."
-                            class="flex-1 bg-black border border-gray-700 theme-text px-4 py-2 text-sm focus:outline-none focus:theme-border"
-                            onkeypress="if(event.key==='Enter') sendChatMessage()">
-                        <button id="chat-send-btn" onclick="sendChatMessage()"
-                            class="text-sm font-bold border theme-border theme-text px-6 py-2 theme-bg transition-all tracking-wider uppercase">Send</button>
-                    </div>
-                </div>
-                <div id="online-agents-sidebar" class="w-48 lg:w-64 border-l border-gray-800 bg-[#0a0a0a] flex-col hidden z-20 absolute right-0 top-0 bottom-0 md:relative shadow-[-10px_0_20px_rgba(0,0,0,0.5)] md:shadow-none">
-                    <div class="p-3 border-b border-gray-800 flex justify-between items-center bg-black/60">
-                        <span class="text-xs theme-text font-bold uppercase tracking-widest">ACTIVE_AGENTS</span>
-                        <button onclick="toggleOnlineAgents()" class="text-gray-500 hover:text-white md:hidden font-bold">X</button>
-                    </div>
-                    <div id="online-agents-list" class="flex-1 overflow-y-auto p-2 flex flex-col gap-1 font-mono text-[11px]"></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- TOP RIGHT BUTTONS -->
     <div class="fixed top-4 right-4 z-[9000] flex gap-2 interactive-area">
-        <button onclick="toggleModal('comms-modal')" class="text-xs font-bold font-mono border theme-border theme-text bg-[#0a0a0a]/90 px-4 py-2 shadow-[0_0_15px_rgba(0,0,0,0.8)] backdrop-blur-md theme-bg transition-all tracking-wider">[ NEW CHATROOM ]</button>
         <button onclick="toggleModal('feedback-modal')" class="text-xs font-bold font-mono border theme-border theme-text bg-[#0a0a0a]/90 px-4 py-2 shadow-[0_0_15px_rgba(0,0,0,0.8)] backdrop-blur-md theme-bg transition-all tracking-wider relative">
-            <span class="absolute -top-1 -right-1 hidden h-3 w-3" id="chat-notification">
-                <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
-            </span>
             [ FEEDBACK ]
         </button>
         <button onclick="toggleModal('changelog-modal')" class="text-xs font-bold font-mono border theme-border theme-text bg-[#0a0a0a]/90 px-4 py-2 shadow-[0_0_15px_rgba(0,0,0,0.8)] backdrop-blur-md theme-bg transition-all tracking-wider">[ UPDATE_LOGS ]</button>
@@ -410,7 +286,7 @@
                     <p>STATUS: <span class="theme-text">Online</span></p>
                     <p>SRC_LINK: <a href="https://docs.google.com/document/d/1_FmH3BlSBQI7FGgAQL59-ZPe8eCxs35wel6JUyVaG8Q/" target="_blank" class="text-white hover:theme-text transition-colors">[ Google Docs ]</a></p>
                     <div class="pt-4 flex flex-wrap gap-2">
-                        <button id="force-load" onclick="loadDatabase(true)" class="text-[10px] border border-gray-700 px-4 py-2 hover:bg-white hover:text-black transition-all font-bold">RELOAD_FILES()</button>
+                        <button id="force-load" onclick="loadDatabase()" class="text-[10px] border border-gray-700 px-4 py-2 hover:bg-white hover:text-black transition-all font-bold">RELOAD_FILES()</button>
                         <button id="random-game" onclick="playRandomGame()" class="text-[10px] border theme-border theme-text px-4 py-2 theme-bg transition-all font-bold">LAUNCH_RANDOM_GAME()</button>
                     </div>
                     <div class="pt-4 w-full max-w-md">
@@ -565,7 +441,6 @@
             newSection:       $('newly-added-section'),
             newContainer:     $('new-games-container'),
             searchInput:      $('search-input'),
-            chatNotification: $('chat-notification'),
             customSource:     $('custom-games-source'),
         };
 
@@ -588,23 +463,6 @@
             const el = $(id);
             if (!el) return;
             el.style.display = (el.style.display === 'flex') ? 'none' : 'flex';
-        }
-
-        function toggleComms() {
-            toggleModal('comms-modal');
-            const modal = $('comms-modal');
-            if (modal.style.display === 'flex') {
-                const cb = $('comms-ad-no-show');
-                if (cb) cb.checked = (localStorage.getItem('ugs_comms_ad_dismissed') === '1');
-            }
-        }
-
-        function handleCommsNoShow(checked) {
-            localStorage.setItem('ugs_comms_ad_dismissed', checked ? '1' : '0');
-        }
-
-        function maybeShowCommsAd() {
-            if (localStorage.getItem('ugs_comms_ad_dismissed') !== '1') toggleModal('comms-modal');
         }
 
         // ── Admin / Auth ─────────────────────────────────────────────
@@ -931,68 +789,21 @@
         observer.observe(DOM.container, { childList: true, subtree: true });
 
         // ── Database Loader ──────────────────────────────────────────
-        const _DB_URL       = 'https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/games.js';
-        const _DB_CACHE_KEY = 'ugs_db_cache';
-        const _DB_CACHE_TTL = 86_400_000; // 24 hours
-
-        function _execDB(code) {
-            const old = $('ugs-data-script');
-            if (old) old.remove();
-            const script = document.createElement('script');
-            script.id = 'ugs-data-script';
-            script.textContent = code;
-            document.body.appendChild(script);
-        }
-
-        function _readCache() {
-            try { const r = localStorage.getItem(_DB_CACHE_KEY); return r ? JSON.parse(r) : null; }
-            catch(e) { return null; }
-        }
-
-        function _writeCache(code) {
-            try { localStorage.setItem(_DB_CACHE_KEY, JSON.stringify({ code, ts: Date.now() })); }
-            catch(e) {} // storage full — not fatal
-        }
-
-        async function loadDatabase(force = false) {
+        function loadDatabase() {
             if (DOM.customSource) DOM.customSource.dataset.integrated = 'false';
             DOM.newContainer.innerHTML = '';
 
-            const cached    = _readCache();
-            const cacheAge  = cached ? (Date.now() - (cached.ts || 0)) : Infinity;
-            const cacheGood = cached?.code && !force && cacheAge < _DB_CACHE_TTL;
+            const old = $('ugs-data-script');
+            if (old) old.remove();
 
-            if (cacheGood) {
-                // Serve instantly from cache, silently refresh in background
-                _execDB(cached.code);
-                fetch(_DB_URL).then(r => r.ok ? r.text() : null).then(code => { if (code) _writeCache(code); }).catch(() => {});
-                return;
-            }
-
-            try {
-                const res = await fetch(_DB_URL);
-                if (!res.ok) throw new Error('fetch failed');
-                const code = await res.text();
-                _writeCache(code);
-                _execDB(code);
-            } catch(err) {
-                if (cached?.code) {
-                    // CDN blocked — fall back to cached copy silently
-                    _execDB(cached.code);
-                } else {
-                    const loader = $('loading-overlay');
-                    if (loader) loader.remove();
-                    const errDiv = Object.assign(document.createElement('div'), {
-                        className: 'text-red-500 text-xs font-mono p-4',
-                        textContent: 'ERROR: DATABASE_UNREACHABLE — No cached data available.'
-                    });
-                    DOM.container.appendChild(errDiv);
-                }
-            }
+            const script = document.createElement('script');
+            script.id = 'ugs-data-script';
+            script.src = 'https://cdn.jsdelivr.net/gh/bubbls/ugs-singlefile@main/games.js';
+            document.body.appendChild(script);
         }
 
         window.addEventListener('DOMContentLoaded', () => {
-            runStartup().then(() => setTimeout(maybeShowCommsAd, 600));
+            runStartup();
             loadDatabase();
         });
     </script>
